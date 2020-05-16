@@ -22,6 +22,8 @@ public class NoteActivity extends AppCompatActivity {
     private Spinner mSpinnerCourses;
     private EditText mTextNoteTitle;
     private EditText mTextNotetext;
+    private int mNotePosition;
+    private boolean mIsCancelling;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,25 @@ public class NoteActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (mIsCancelling) {
+            if(mIsNewNote) {
+                DataManager.getInstance().removeNote(mNotePosition);
+            }
+        }
+        saveNote();
+    }
+
+    private void saveNote() {
+        mNote.setCourse((CourseInfo) mSpinnerCourses.getSelectedItem());
+        mNote.setTitle(mTextNoteTitle.getText().toString());
+        mNote.setText(mTextNotetext.getText().toString());
+
+    }
+
     private void displayNote(Spinner spinnerCourses, EditText textNoteTitle, EditText textNoteText) {
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
         int courseIndex = courses.indexOf(mNote.getCourse());
@@ -61,9 +82,18 @@ public class NoteActivity extends AppCompatActivity {
         Intent intent = getIntent();
       int  position = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
         mIsNewNote = position == POSITION_NOT_SET;
-        if(!mIsNewNote){
+        if(mIsNewNote){
+           createNewNote();
+        }
+        else {
             mNote = DataManager.getInstance().getNotes().get(position);
         }
+    }
+
+    private void createNewNote() {
+        DataManager dm = DataManager.getInstance();
+        mNotePosition = dm.createNewNote();
+        mNote = dm.getNotes().get(mNotePosition);
     }
 
     @Override
@@ -85,6 +115,11 @@ public class NoteActivity extends AppCompatActivity {
             sendEmail();
             return true;
         }
+        else if (id == R.id.action_cancel){
+            mIsCancelling = true;
+            finish();
+
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -92,6 +127,12 @@ public class NoteActivity extends AppCompatActivity {
     private void sendEmail() {
         CourseInfo course = (CourseInfo) mSpinnerCourses.getSelectedItem();
         String subject = mTextNoteTitle.getText().toString();
-        String text = "Check out what I learned in pluralsight course \"" + course.getTitle() + "\"\n" + mTextNotetext.getText();
+        String text = "Check out what I learned in pluralsight course \"" +
+                course.getTitle() + "\"\n" + mTextNotetext.getText();
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("message/rfc2822");
+        intent.putExtra(Intent.EXTRA_SUBJECT,subject);
+        intent.putExtra(Intent.EXTRA_TEXT, text);
+        startActivity(intent);
     }
 }
