@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -17,6 +18,7 @@ import android.widget.Spinner;
 import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
+    private final String TAG = getClass().getSimpleName();
     public static final String NOTE_POSITION    = "com.taofeek.myapplication.NOTE_POSITION";
     public static final int POSITION_NOT_SET = -1;
     private NoteInfo mNote;
@@ -58,6 +60,7 @@ public class NoteActivity extends AppCompatActivity {
         if(!mIsNewNote) {
             displayNote(mSpinnerCourses, mTextNoteTitle, mTextNotetext);
         }
+        Log.d(TAG,"OnCreate");
 
     }
 
@@ -91,6 +94,7 @@ public class NoteActivity extends AppCompatActivity {
             }
         }
         saveNote();
+        Log.d(TAG,"onPause");
     }
 
     private void storePreviousValues() {
@@ -127,6 +131,7 @@ public class NoteActivity extends AppCompatActivity {
         else {
             mNote = DataManager.getInstance().getNotes().get(position);
         }
+        Log.i(TAG, "mNotePosition " + mNotePosition);
     }
 
     private void createNewNote() {
