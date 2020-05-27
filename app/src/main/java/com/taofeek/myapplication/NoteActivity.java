@@ -111,6 +111,12 @@ public class NoteActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_next);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     private void displayNote(Spinner spinnerCourses, EditText textNoteTitle, EditText textNoteText) {
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
         int courseIndex = courses.indexOf(mNote.getCourse());
@@ -162,10 +168,20 @@ public class NoteActivity extends AppCompatActivity {
         else if (id == R.id.action_cancel){
             mIsCancelling = true;
             finish();
-
+        }
+        else if (id == R.id.action_next){
+            moveNext();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void moveNext() {
+        saveNote();
+        ++mNotePosition;
+        mNote = DataManager.getInstance().getNotes().get(mNotePosition);
+        saveOriginalNoteValues();
+         displayNote(mSpinnerCourses,mTextNoteTitle,mTextNotetext);
     }
 
     private void sendEmail() {
