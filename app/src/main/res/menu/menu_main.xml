@@ -3,8 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.taofeek.myapplication.NoteActivity">
     <item
-        android:id="@+id/action_send_mail"
+        android:id="@+id/action_previous"
+        android:icon="@android:drawable/ic_media_previous"
         android:orderInCategory="100"
+        android:title="Previous"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_send_mail"
+        android:orderInCategory="101"
         android:title="Send as email"
         app:showAsAction="never" />
     <item

@@ -114,6 +114,11 @@ public class NoteActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.action_next);
+        int lastNoteIndex = DataManager.getInstance().getNotes().size() -1;
+        item.setEnabled(mNotePosition < lastNoteIndex);
+
+        MenuItem itemPrevious = menu.findItem(R.id.action_previous);
+        itemPrevious.setEnabled(mNotePosition < 1);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -172,8 +177,20 @@ public class NoteActivity extends AppCompatActivity {
         else if (id == R.id.action_next){
             moveNext();
         }
+        else if ( id == R.id.action_previous){
+            movePrevious();
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void movePrevious() {
+        saveNote();
+        --mNotePosition;
+        mNote = DataManager.getInstance().getNotes().get(mNotePosition);
+        saveOriginalNoteValues();
+        displayNote(mSpinnerCourses,mTextNoteTitle,mTextNotetext);
+        invalidateOptionsMenu();
     }
 
     private void moveNext() {
@@ -181,7 +198,8 @@ public class NoteActivity extends AppCompatActivity {
         ++mNotePosition;
         mNote = DataManager.getInstance().getNotes().get(mNotePosition);
         saveOriginalNoteValues();
-         displayNote(mSpinnerCourses,mTextNoteTitle,mTextNotetext);
+        displayNote(mSpinnerCourses,mTextNoteTitle,mTextNotetext);
+        invalidateOptionsMenu();
     }
 
     private void sendEmail() {
