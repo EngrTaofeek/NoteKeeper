@@ -11,9 +11,12 @@ import androidx.lifecycle.ViewModelProvider;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -185,12 +188,14 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private void movePrevious() {
-        saveNote();
+        /*saveNote();
         --mNotePosition;
         mNote = DataManager.getInstance().getNotes().get(mNotePosition);
         saveOriginalNoteValues();
         displayNote(mSpinnerCourses,mTextNoteTitle,mTextNotetext);
-        invalidateOptionsMenu();
+        invalidateOptionsMenu();*/
+        View view = findViewById(R.id.note_layout);
+        Snackbar.make(view, "Notes", Snackbar.LENGTH_LONG).show();
     }
 
     private void moveNext() {
