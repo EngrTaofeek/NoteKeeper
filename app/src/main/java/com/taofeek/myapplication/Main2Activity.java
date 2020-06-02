@@ -150,19 +150,39 @@ public class Main2Activity extends AppCompatActivity implements NavigationView.O
         if (id == R.id.nav_note) {
             handleSelection("Notes");
             displayNotes();
-        } else if (id == R.id.nav_courses) {
+        }
+        else if (id == R.id.nav_courses) {
             handleSelection("Courses");
             displayCourses();
-        } else if (id == R.id.nav_share) {
+        }
+        else if (id == R.id.nav_share) {
             handleSelection("Don't you think you've shared enough");
-        } else if (id == R.id.nav_send) {
+        }
+        else if (id == R.id.nav_send) {
             handleSelection("Send");
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void handleSelection(String message) {
         View view = findViewById(R.id.list_items);
