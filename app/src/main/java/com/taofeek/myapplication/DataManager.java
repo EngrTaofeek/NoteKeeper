@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataManager {
-    public static final String[] courseColumns = {CourseInfoEntry.COLUMN_COURSE_ID, CourseInfoEntry.COLUMN_COURSE_TITLE};
-    public static final String[] noteColumns = {NoteInfoEntry.COLUMN_NOTE_TITLE, NoteInfoEntry.COLUMN_NOTE_TEXT, NoteInfoEntry.COLUMN_COURSE_ID};
+    //public static final String[] courseColumns = {CourseInfoEntry.COLUMN_COURSE_ID, CourseInfoEntry.COLUMN_COURSE_TITLE};
+    //public static final String[] noteColumns = {NoteInfoEntry.COLUMN_NOTE_TITLE, NoteInfoEntry.COLUMN_NOTE_TEXT, NoteInfoEntry.COLUMN_COURSE_ID};
     private static DataManager ourInstance = null;
 
     private List<CourseInfo> mCourses = new ArrayList<>();
@@ -26,6 +26,7 @@ public class DataManager {
         }
         return ourInstance;
     }
+
     public static void loadFromDatabase(NotekeeperOpenHelper dbHelper) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         final String[] courseColumns = {
@@ -61,7 +62,7 @@ public class DataManager {
             int id = cursor.getInt(idPos);
 
             CourseInfo noteCourse = dm.getCourse(courseId);
-            NoteInfo note = new NoteInfo(noteCourse, noteTitle, noteText);
+            NoteInfo note = new NoteInfo(id, noteCourse, noteTitle, noteText);
             dm.mNotes.add(note);
         }
         cursor.close();
@@ -84,11 +85,11 @@ public class DataManager {
     }
 
     public String getCurrentUserName() {
-        return "Taofeek Oduola";
+        return "Jim Wilson";
     }
 
     public String getCurrentUserEmail() {
-        return "oduola.taofeekkola@gmail.com";
+        return "jimw@jwhh.com";
     }
 
     public List<NoteInfo> getNotes() {
@@ -98,7 +99,7 @@ public class DataManager {
     public int createNewNote() {
         NoteInfo note = new NoteInfo(null, null, null);
         mNotes.add(note);
-        return mNotes.size()  -1;
+        return mNotes.size() - 1;
     }
 
     public int findNote(NoteInfo note) {
@@ -253,6 +254,16 @@ public class DataManager {
         modules.add(new ModuleInfo("java_core_m10", "Persisting Objects with Serialization"));
 
         return new CourseInfo("java_core", "Java Fundamentals: The Core Platform", modules);
+    }
+
+    public int createNewNote(CourseInfo course, String noteTitle, String noteText) {
+        int index = createNewNote();
+        NoteInfo note = getNotes().get(index);
+        note.setCourse(course);
+        note.setTitle(noteTitle);
+        note.setText(noteText);
+
+        return index;
     }
     //endregion
 
